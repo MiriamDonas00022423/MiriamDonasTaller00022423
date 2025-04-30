@@ -1,3 +1,5 @@
+package com.pmtaller2.MiriamDonas_00022423.ui.screens.Orders
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +16,7 @@ fun OrdersScreen(){
         contentAlignment = Alignment.Center
     ){
         Text(
-            text = "“Pantalla de órdenes",
+            text = "Pantalla de órdenes",
             style = MaterialTheme.typography.titleLarge
         )
     }

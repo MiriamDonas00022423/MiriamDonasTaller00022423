@@ -1,8 +1,7 @@
 import kotlinx.serialization.Serializable
 
+const val RestaurantMenuScreenNavigationId = "com.pmtaller2.MiriamDonas_00022423.ui.navigations.RestaurantMenuScreenNavigation/{id}"
 
-/*@Serializable allows you to convert objects to text and text to objects automatically.
-This is very useful for passing parameters between screens in Compose Navigation*/
 
 @Serializable
 object RestaurantScreenNavigation

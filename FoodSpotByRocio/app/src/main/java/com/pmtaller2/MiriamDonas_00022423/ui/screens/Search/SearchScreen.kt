@@ -1,3 +1,5 @@
+package com.pmtaller2.MiriamDonas_00022423.ui.screens.Search
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +17,7 @@ fun SearchScreen(){
         contentAlignment = Alignment.Center
     ){
         Text(
-            text = "“Pantalla de búsqueda",
+            text = "Pantalla de búsqueda",
             style = MaterialTheme.typography.titleLarge
         )
     }

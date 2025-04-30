@@ -1,3 +1,4 @@
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,31 +13,40 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.pmtaller2.MiriamDonas_00022423.data.dummy.dummyRestaurants
-
+import coil.compose.AsyncImage
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 
 @Composable
-fun RestaurantDetailScreen(
+fun RestaurantMenuScreen(
     restaurantId: Int
 ) {
     val scrollState = rememberScrollState()
     val restaurant = dummyRestaurants.firstOrNull { it.id == restaurantId }
+
+    var search by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
 
     if (restaurant == null) {
         Box(
@@ -51,13 +61,16 @@ fun RestaurantDetailScreen(
         return
     }
 
+    val filteredMenu = restaurant.menu.filter { dish ->
+        dish.name.contains(search, ignoreCase = true)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .background(Color.White)
     ) {
-
         AsyncImage(
             model = restaurant.imageUrl,
             contentDescription = null,
@@ -66,7 +79,6 @@ fun RestaurantDetailScreen(
                 .height(200.dp),
             contentScale = ContentScale.Crop
         )
-
 
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -85,10 +97,17 @@ fun RestaurantDetailScreen(
                 text = "Categorías: ${restaurant.categories.joinToString()}",
                 style = MaterialTheme.typography.bodySmall
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                value = search,
+                onValueChange = { search = it },
+                label = { Text("Buscar platillo") },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text(
@@ -98,7 +117,7 @@ fun RestaurantDetailScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            restaurant.menu.forEach { dish ->
+            filteredMenu.forEach { dish ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -111,13 +130,15 @@ fun RestaurantDetailScreen(
                             model = dish.imageUrl,
                             contentDescription = dish.name,
                             modifier = Modifier
+                                .width(100.dp)
+                                .height(100.dp)
                                 .clip(RoundedCornerShape(8.dp)),
                             contentScale = ContentScale.Crop
                         )
 
                         Spacer(modifier = Modifier.width(16.dp))
 
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = dish.name,
                                 style = MaterialTheme.typography.titleMedium,
@@ -128,6 +149,18 @@ fun RestaurantDetailScreen(
                                 text = dish.description,
                                 style = MaterialTheme.typography.bodySmall
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "${dish.name} agregado al carrito",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            ) {
+                                Text("Agregar al carrito")
+                            }
                         }
                     }
                 }
@@ -138,8 +171,9 @@ fun RestaurantDetailScreen(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun MenuDetailScreenPreview(){
-    RestaurantDetailScreen()
+    //RestaurantMenuScreen()
 }

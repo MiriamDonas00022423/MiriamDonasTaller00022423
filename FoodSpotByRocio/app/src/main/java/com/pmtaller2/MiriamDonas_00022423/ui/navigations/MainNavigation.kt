@@ -1,32 +1,48 @@
+package com.pmtaller2.MiriamDonas_00022423.ui.navigations.MainNavigation
+
+import OrdersScreenNavigation
+import RestaurantMenuScreen
+import RestaurantMenuScreenNavigation
+import RestaurantScreenNavigation
+import SearchScreenNavigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.pmtaller2.MiriamDonas_00022423.ui.screens.Orders.OrdersScreen
+import com.pmtaller2.MiriamDonas_00022423.ui.screens.Search.SearchScreen
+import com.pmtaller2.MiriamDonas_00022423.ui.screens.Restaurant.RestaurantScreen
+
 
 @Composable
-
 fun MainNavigation(navController: NavHostController) {
 
-    /*onMovieClick is a lambda function that receives the ID of the tapped movie.
-    When a movie is tapped, it uses the navController to navigate to the details screen (MovieDetailScreenNavigation(movieId).*/
     val onRestaurantClick = { restaurantId: Int ->
         navController.navigate(RestaurantMenuScreenNavigation(restaurantId))
     }
 
-    NavHost(navController = navController, startDestination = RestaurantScreenNavigation) {
+    NavHost(
+        navController = navController,
+        startDestination = RestaurantScreenNavigation
+    ) {
+        composable<RestaurantScreenNavigation> {
+            RestaurantScreen(onRestaurantClick = onRestaurantClick)
+        }
 
-        composable <RestaurantScreenNavigation> {
-            RestaurantListScreen(onRestaurantClick)
+        composable<RestaurantMenuScreenNavigation> { backStackEntry ->
+            val restaurantId = backStackEntry.arguments?.getInt("id") ?: 0
+            RestaurantMenuScreen(restaurantId = restaurantId)
         }
-        composable <MovieDetailScreenNavigation> { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getInt("id") ?: 0
-            MovieDetailScreen(movieId = movieId)
-        }
-        /*Displays your favorite movie screen.*/
-        composable<OrdersScreenNavigation> {
+
+        composable("orders") {
             OrdersScreen()
         }
-        composable<SearchScreenNavigation> {
+
+        composable("search") {
             SearchScreen()
         }
     }
 }
+
+
+
